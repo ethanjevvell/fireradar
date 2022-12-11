@@ -25,7 +25,7 @@ except FileNotFoundError:
     print('No pre-existing file to delete; downloading latest data...')
 
 wget.download('https://firms.modaps.eosdis.nasa.gov/data/active_fire/suomi-npp-viirs-c2/shapes/zips/SUOMI_VIIRS_C2_Russia_Asia_24h.zip',
-              out='/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+              out='/home/ethanjewell/fireradar/')
 
 shape_zip = '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip'
 with zipfile.ZipFile(shape_zip, 'r') as zip_ref:
