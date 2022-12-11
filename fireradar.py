@@ -20,22 +20,22 @@ def sendAlert(content):  # Sends an email with given content
 
 
 try:
-    os.remove('/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+    os.remove('/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
 except FileNotFoundError:
     print('No pre-existing file to delete; downloading latest data...')
 
 wget.download('https://firms.modaps.eosdis.nasa.gov/data/active_fire/suomi-npp-viirs-c2/shapes/zips/SUOMI_VIIRS_C2_Russia_Asia_24h.zip',
-              out='/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+              out='/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
 
-shape_zip = '/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip'
+shape_zip = '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip'
 with zipfile.ZipFile(shape_zip, 'r') as zip_ref:
     zip_ref.extractall(
-        '/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+        '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
 
 border = gpd.read_file(
-    '/Users/ethanjewell/fireradar/National Borders with Provinces.shp')
+    '/home/ethanjewell/fireradar/National Borders with Provinces.shp')
 fires = gpd.read_file(
-    '/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+    '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
 pointInPolys = gpd.tools.sjoin(
     fires, border, predicate="intersects", how='inner')
 
@@ -95,7 +95,7 @@ if len(fires_for_email) >= 5:
 # xs = [point.x for point in point_poly]
 # ys = [point.y for point in point_poly]
 
-# border = gpd.read_file('/Users/ethanjewell/Desktop/Python Env/Scripting/Map Data/Shapefiles/NATIONAL/National Borders with Provinces/National Borders with Provinces.shp')
+# border = gpd.read_file('/home/ethanjewell/Desktop/Python Env/Scripting/Map Data/Shapefiles/NATIONAL/National Borders with Provinces/National Borders with Provinces.shp')
 # print(point_poly)
 
 # fig, ax = plt.subplots()
