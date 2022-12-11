@@ -1,16 +1,11 @@
 # %%
 import geopandas as gpd
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from shapely.geometry import Point, Polygon
 from shapely.geometry import shape
 import matplotlib.pyplot as plt
 import zipfile
 import yagmail
 import wget
 import os
-import requests
 
 # %%
 
