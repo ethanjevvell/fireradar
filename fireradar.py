@@ -25,33 +25,33 @@ def sendAlert(content):  # Sends an email with given content
 
 
 try:
-    os.remove('/Users/ethanjewell/Desktop/Python Env/Scripting/ThermalRadar/RAW/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+    os.remove('/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
 except FileNotFoundError:
     print('No pre-existing file to delete; downloading latest data...')
 
 wget.download('https://firms.modaps.eosdis.nasa.gov/data/active_fire/suomi-npp-viirs-c2/shapes/zips/SUOMI_VIIRS_C2_Russia_Asia_24h.zip',
-              out='/Users/ethanjewell/Desktop/Python Env/Scripting/ThermalRadar/RAW/')
+              out='/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
 
-shape_zip = '/Users/ethanjewell/Desktop/Python Env/Scripting/ThermalRadar/RAW/SUOMI_VIIRS_C2_Russia_Asia_24h.zip'
+shape_zip = '/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip'
 with zipfile.ZipFile(shape_zip, 'r') as zip_ref:
     zip_ref.extractall(
-        '/Users/ethanjewell/Desktop/Python Env/Scripting/ThermalRadar/RAW/')
+        '/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
 
 border = gpd.read_file(
-    '/Users/ethanjewell/Desktop/Python Env/Scripting/Map Data/Shapefiles/NATIONAL/National Borders with Provinces/National Borders with Provinces.shp')
+    '/Users/ethanjewell/fireradar/National Borders with Provinces.shp')
 fires = gpd.read_file(
-    '/Users/ethanjewell/Desktop/Python Env/Scripting/ThermalRadar/RAW/SUOMI_VIIRS_C2_Russia_Asia_24h.shp')
+    '/Users/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
 pointInPolys = gpd.tools.sjoin(
     fires, border, predicate="intersects", how='inner')
 
-axes = border.boundary.plot(figsize=(10, 10), color='black', linewidth=0.3)
-axes.set_axis_off()
+# axes = border.boundary.plot(figsize=(10, 10), color='black', linewidth=0.3)
+# axes.set_axis_off()
 
-plot = pointInPolys.plot(ax=axes, color='red', markersize=(
-    pointInPolys['BRIGHT_TI4']/100)**3)
+# plot = pointInPolys.plot(ax=axes, color='red', markersize=(
+#     pointInPolys['BRIGHT_TI4']/100)**3)
 
-plot.set_title(
-    'Thermal Anomalies in the DPRK: VIIRS SUOMI Polar Orbiter', fontsize=20)
+# plot.set_title(
+#     'Thermal Anomalies in the DPRK: VIIRS SUOMI Polar Orbiter', fontsize=20)
 
 fires_only = pointInPolys[['name_en', 'BRIGHT_TI4']]
 
@@ -72,23 +72,23 @@ if len(fires_for_email) >= 5:
 # %%
 # FOR THE FUTURE -- An attempt at using the API instead of downloading shapefiles with wget
 
-def createDF():
+# def createDF():
 
-    API = 'https://firms.modaps.eosdis.nasa.gov/api/country/csv/a1965c3e5f85c73b483a1ca7d4a0ea36/VIIRS_SNPP_NRT/PRK/3'
-    response = requests.get(API)
-    response.text
+#     API = 'https://firms.modaps.eosdis.nasa.gov/api/country/csv/a1965c3e5f85c73b483a1ca7d4a0ea36/VIIRS_SNPP_NRT/PRK/3'
+#     response = requests.get(API)
+#     response.text
 
-    rows = response.text.split('\n')
-    detailed_rows = []
+#     rows = response.text.split('\n')
+#     detailed_rows = []
 
-    i = 1
+#     i = 1
 
-    while i < len(rows):
-        detailed_rows.append(rows[i].split(','))
-        i += 1
+#     while i < len(rows):
+#         detailed_rows.append(rows[i].split(','))
+#         i += 1
 
-    df = pd.DataFrame(detailed_rows, columns=rows[0].split(','))
-    return df
+#     df = pd.DataFrame(detailed_rows, columns=rows[0].split(','))
+#     return df
 # point_df = df[['latitude', 'longitude']]
 # point_tuples = list(point_df.itertuples(index=False, name=None))
 
