@@ -30,12 +30,12 @@ wget.download('https://firms.modaps.eosdis.nasa.gov/data/active_fire/suomi-npp-v
 shape_zip = '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip'
 with zipfile.ZipFile(shape_zip, 'r') as zip_ref:
     zip_ref.extractall(
-        '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+        '/home/ethanjewell/fireradar/')
 
 border = gpd.read_file(
     '/home/ethanjewell/fireradar/National Borders with Provinces.shp')
 fires = gpd.read_file(
-    '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+    '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.shp')
 pointInPolys = gpd.tools.sjoin(
     fires, border, predicate="intersects", how='inner')
 
