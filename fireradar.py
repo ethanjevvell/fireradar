@@ -6,9 +6,7 @@ import zipfile
 import yagmail
 import wget
 import os
-
-# %%
-
+from datetime import datetime as dt
 
 def sendAlert(content):  # Sends an email with given content
 
@@ -20,40 +18,31 @@ def sendAlert(content):  # Sends an email with given content
 
 
 try:
-    os.remove('/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip')
+    os.remove('/home/scripts/fireradar/J1_VIIRS_C2_Russia_Asia_24h.zip')
 except FileNotFoundError:
     print('No pre-existing file to delete; downloading latest data...')
 
-wget.download('https://firms.modaps.eosdis.nasa.gov/data/active_fire/suomi-npp-viirs-c2/shapes/zips/SUOMI_VIIRS_C2_Russia_Asia_24h.zip',
-              out='/home/ethanjewell/fireradar/')
+wget.download('https://firms.modaps.eosdis.nasa.gov/data/active_fire/noaa-20-viirs-c2/shapes/zips/J1_VIIRS_C2_Russia_Asia_24h.zip',
+              out='/home/scripts/fireradar/J1_VIIRS_C2_Russia_Asia_24h.zip')
 
-shape_zip = '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.zip'
+shape_zip = '/home/scripts/fireradar/J1_VIIRS_C2_Russia_Asia_24h.zip'
 with zipfile.ZipFile(shape_zip, 'r') as zip_ref:
     zip_ref.extractall(
-        '/home/ethanjewell/fireradar/')
+        '/home/scripts/fireradar/')
 
 border = gpd.read_file(
-    '/home/ethanjewell/fireradar/National Borders with Provinces.shp')
+    '/home/scripts/fireradar/National Borders with Provinces.shp')
 fires = gpd.read_file(
-    '/home/ethanjewell/fireradar/SUOMI_VIIRS_C2_Russia_Asia_24h.shp')
+    '/home/scripts/fireradar/J1_VIIRS_C2_Russia_Asia_24h.shp')
 pointInPolys = gpd.tools.sjoin(
     fires, border, predicate="intersects", how='inner')
-
-# axes = border.boundary.plot(figsize=(10, 10), color='black', linewidth=0.3)
-# axes.set_axis_off()
-
-# plot = pointInPolys.plot(ax=axes, color='red', markersize=(
-#     pointInPolys['BRIGHT_TI4']/100)**3)
-
-# plot.set_title(
-#     'Thermal Anomalies in the DPRK: VIIRS SUOMI Polar Orbiter', fontsize=20)
 
 fires_only = pointInPolys[['name_en', 'BRIGHT_TI4']]
 
 fires_for_email = fires_only.rename(
     columns={"name_en": "Province", "BRIGHT_TI4": "Brightness"})
 print()
-print(f'{len(fires_for_email)} fires detected in the last hour.')
+print(f'{len(fires_for_email)} fires detected in the last hour — {dt.now()}')
 
 if fires_for_email['Province'].str.contains('Pyongyang').any():
     sendAlert(
