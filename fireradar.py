@@ -45,6 +45,7 @@ print()
 print(f'{len(fires_for_email)} fires detected in the last hour — {dt.now()}')
 
 if fires_for_email['Province'].str.contains('Pyongyang').any():
+    printf(f'Fires detected in Pyongyang')
     sendAlert(
         f'Fire(s) detected in Pyongyang. Here\'re the most recent fires: \n {fires_for_email.to_html()}')
 
