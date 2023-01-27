@@ -8,10 +8,12 @@ import wget
 import os
 from datetime import datetime as dt
 
+EMAIL_PASS = os.environ.get("EMAIL_PASS")
+
 def sendAlert(content):  # Sends an email with given content
 
     user = yagmail.SMTP(user='nknews.scriptalerts@gmail.com',
-                        password='zjfelavkafmzykiu') # This is the App Password for Python scripts that use this gmail account! Keep it secure.
+                        password=EMAIL_PASS)
     user.send(to='ethan.jewell@nknews.org',
                  subject='[FIRE ALERT] -- Fires detected',
                  contents=content)
@@ -45,7 +47,7 @@ print()
 print(f'{len(fires_for_email)} fires detected in the last hour — {dt.now()}')
 
 if fires_for_email['Province'].str.contains('Pyongyang').any():
-    printf(f'Fires detected in Pyongyang')
+    print(f'Fires detected in Pyongyang')
     sendAlert(
         f'Fire(s) detected in Pyongyang. Here\'re the most recent fires: \n {fires_for_email.to_html()}')
 
